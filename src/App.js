@@ -1,26 +1,38 @@
-import React from 'react';
-import logo from './logo.svg';
+import Form from './Form';
 import './App.css';
+import React, {Component} from 'react'
+import  { connect } from  'react-redux'
+import { getTakeouts } from './actions/takeout'
+class App extends Component{
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+  componentDidMount(){
+    this.props.getTakeouts()
+  }
+  render(){   
+ 
+  const takeouts = this.props.takeouts.map((takeout, i) => <li key={i}>{takeout.name}</li>)
+    return (
+      <div className="App">
+          <header className="App-header">
+            <h1>hello</h1>
+
+            <Form/>
+            <ul>
+              {this.props.loading ? <h3>Loading.....</h3> : takeouts}
+              <br/>
+            </ul>
+          </header>
+        </div>
+    )
+  } 
+  
 }
 
-export default App;
+const mapStateToProps = state => {
+  return {
+    takeouts: state.takeoutReducer.takeout,
+    loading: state.takeoutReducer.loading
+
+  }
+}
+export default connect(mapStateToProps, getTakeouts )(App);
